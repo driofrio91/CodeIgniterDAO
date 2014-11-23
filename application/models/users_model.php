@@ -5,13 +5,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+include_once ('application/crud/CRUD.php');
 
 /**
  * Description of Usuario
  *
  * @author Sandy
  */
-class Users_model extends CI_Model {
+class Users_model extends CI_Model implements CRUD {
 
     private static $TABLE_NAME = 'USERS';
     private $id_User;
@@ -20,19 +21,18 @@ class Users_model extends CI_Model {
     private $email;
     private $password;
 
-    
-    
-    
-    /**
-     * 
-     */
-    public function __construct() {
+
+
+    function __construct($name = false, $nick = false, $email = false, $password = false) {
         parent::__construct();
         $this->load->database();
+        //
+        $this->name = $name;
+        $this->nick = $nick;
+        $this->email = $email;
+        $this->password = $password;
     }
-    
-    
-    
+
     public function getId_User() {
         return $this->id_User;
     }
@@ -49,10 +49,7 @@ class Users_model extends CI_Model {
         return $this->email;
     }
 
-    public function getPass() {
-        return $this->pass;
-    }
-
+    
     public function setId_User($id_User) {
         $this->id_User = $id_User;
     }
@@ -69,33 +66,72 @@ class Users_model extends CI_Model {
         $this->email = $email;
     }
 
-    public function setPass($pass) {
-        $this->pass = $pass;
+    public function getPassword() {
+        return $this->password;
     }
 
+    public function setPassword($password) {
+        $this->password = $password;
+    }
+
+    
+    ////////////////////////////////////////////
+    /////////////////JSON///////////////////////
+    ////////////////////////////////////////////
+    
+    public function goToJson($object){
+        
+            $user = array('id_User' => $object->getId_User(),
+                'name' => $object->getName(),
+                'nick' => $object->getNick(),
+                'email' => $object->getEmail(),
+                'password' => $object->getPassword());
+        
+        return $user;
+    }
+    
+    
     ///////////////////////////////////////////////    
     ///////////DATABASE////////////////////////////
     ///////////////////////////////////////////////
-    
+
     /**
      * 
      * @param type $user
      */
-
-    public function create($user){
+    public function create($user) {
         if ($user instanceof Users_model) {
-            $data = array('id_User' => $user->getId_User(),
-                            'name' => $user->getName(),
-                            'nick' => $user->getNick(),
-                            'email' => $user->getEmail(),
-                            'password' => $user->getPass());
+            $data = array('name' => $user->getName(),
+                'nick' => $user->getNick(),
+                'email' => $user->getEmail(),
+                'password' => $user->getPassword());
+            $this->db->insert('USERS', $data);
+            $user->setId_User($this->db->insert_id());
         }
+        $temp = $this->goToJson($user);
+        return $temp;
     }
 
+    public function delete($object) {
+        
+    }
+
+    public function read($id) {
+        
+    }
+
+    public function update($object) {
+        
+    }
 
     public function getALL() {
         $query = $this->db->get('USERS');
         return $query->result_array();
     }
 
+    public function checkNick($nick){
+         $query = $this->db->get_where('USERS', array('nick' => $nick));
+         return $query->row_array();
+    }
+    
 }

@@ -5,11 +5,5 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-include_once ('application/dao/DAO.php');
-/**
- *
- * @author danny
- */
-interface iUsersDAO extends DAO{
-    //put your code here
-}
+$this->output->set_header('Content-Type: application/json; charset=utf-8');
+echo json_encode($user);

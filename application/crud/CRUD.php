@@ -5,11 +5,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-include_once ('application/dao/DAO.php');
+
 /**
  *
  * @author danny
  */
-interface iListTaskDAO extends DAO{
-    //put your code here
+interface CRUD {
+    public function create($object);
+    public function read($id);
+    public function update($object);
+    public function delete($object);
+    //
+    public function getAll();
 }
