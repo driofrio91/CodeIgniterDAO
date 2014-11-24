@@ -5,27 +5,25 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+include_once ('application/crud/CRUD.php');
 
 /**
  * Description of listtask_model
  *
  * @author danny
  */
-class listtask_model extends CI_Model implements CRUD{
-    
-    
+class listtask_model extends CI_Model implements CRUD {
 
-	private $id_List;
-	private $titleList;
-	private $dateList;
-	private $status_share;
-	private $status;	
-	private $id_UnicoL;	
-	private $id_Group;
-	private $id_User;
-    
-    function __construct($id_List = false, $titleList = false, $dateList = false, $status_share = false, $status = false,
-            $idUnicoL = false, $id_Group = false, $id_User = false) {
+    private $id_List;
+    private $titleList;
+    private $dateList;
+    private $status_share;
+    private $status;
+    private $id_UnicoL;
+    private $id_Group;
+    private $id_User;
+
+    function __construct($id_List = false, $titleList = false, $dateList = false, $status_share = false, $status = false, $idUnicoL = false, $id_Group = false, $id_User = false) {
         parent::__construct();
         $this->load->database();
         //
@@ -37,9 +35,8 @@ class listtask_model extends CI_Model implements CRUD{
         $this->id_UnicoL = $idUnicoL;
         $this->id_Group = $id_Group;
         $this->id_User = $id_User;
-     
     }
-    
+
     public function getId_List() {
         return $this->id_List;
     }
@@ -104,37 +101,9 @@ class listtask_model extends CI_Model implements CRUD{
         $this->id_User = $id_User;
     }
 
-    
     ////////////////////////////////////////////
     /////////////////JSON///////////////////////
     ////////////////////////////////////////////
-    
-    public function goToJson($object){
-        
-            $user = array('id_User' => $object->getId_User(),
-                'name' => $object->getName(),
-                'nick' => $object->getNick(),
-                'email' => $object->getEmail(),
-                'password' => $object->getPassword());
-        
-        return $user;
-    }
-    
-    /////////////////////////////////////////
-    ////////////////DATABASE/////////////////
-    /////////////////////////////////////////
-    
-    public function create($list_task) {
-        if ($list_task instanceof listtask_model) {
-             $data = array('titleList' => $list_task->getTitleList(),
-                'dateList' => $list_task->getDateList(),
-                'status_share' => $list_task->getStatus_share(),
-                'id_UnicoL' => $list_task->getId_UnicoL(),
-                 );
-            $this->db->insert('USERS', $data);
-            $user->setId_User($this->db->insert_id());
-        }
-    }
 //    private $id_List;
 //	private $titleList;
 //	private $dateList;
@@ -143,6 +112,41 @@ class listtask_model extends CI_Model implements CRUD{
 //	private $id_UnicoL;	
 //	private $id_Group;
 //	private $id_User;
+    public function goToJson($object) {
+        if ($object instanceof listtask_model) {
+            $list_task = array('id_List' => $object->getId_List(),
+                'titleList' => $object->getTitleList(),
+                'dateList' => $object->getDateList(),
+                'status_share' => $object->getStatus_share(),
+                'status' => $object->getStatus(),
+                'id_UnicoL' => $object->getId_UnicoL(),
+                'id_Group' => $object->getId_Group(),
+                'id_User' => $object->getId_User());
+        }
+
+
+        return $list_task;
+    }
+
+    /////////////////////////////////////////
+    ////////////////DATABASE/////////////////
+    /////////////////////////////////////////
+
+    public function create($list_task) {
+
+        $data = array('titleList' => $list_task->getTitleList(),
+            'dateList' => $list_task->getDateList(),
+            'status_share' => $list_task->getStatus_share(),
+            'status' => $list_task->getStatus(),
+            'id_UnicoL' => $list_task->getId_UnicoL(),
+            'id_Group' => $list_task->getId_Group(),
+            'id_User' => $list_task->getId_User());
+        $this->db->insert('LISTTASKS', $data);
+        $list_task->setId_List($this->db->insert_id());
+
+      //  $temp = $this->goToJson($list_task);
+        return $list_task;
+    }
 
     public function delete($object) {
         

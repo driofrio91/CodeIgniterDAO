@@ -16,6 +16,7 @@ class ListTask extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('listtask_model');
+        $this->load->model('task_model');
     }
 
     //    private $id_List;
@@ -31,14 +32,18 @@ class ListTask extends CI_Controller {
 
         $list_task = new listtask_model($titleList, $dateList, $status_share, $status, $id_UnicoL, $id_Group, $id_User);
         
+        $list_task_insert = $this->listtask_model->create($list_task);
+        
         $task = json_decode($_REQUEST['json'], TRUE);
         if (is_array($task)){
-            foreach ($task as $key => $value) {
-                foreach ($value as $key => $value) {
-                    //JSON contiene solo tittle y realized
-                    echo $key.'-------------------';
-                    echo '<br>'.$value.'<br>';
-                }
+            foreach ($task as $key => $values) {
+//                foreach ($values as $key => $value) {
+                    //JSON contiene solo tittle y re
+//                    echo $key.'-------------------';
+//                    echo '<br>'.$value.'<br>';
+                    $task = new task_model(null,$values['tittle'], $values['realized'], $list_task_insert->getId_List());
+                    $this->task_model->create($task);
+//                }
             }
         }
     }

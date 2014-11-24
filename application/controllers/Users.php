@@ -14,7 +14,6 @@ include_once('application/crud/CRUD.php');
  */
 class Users extends CI_Controller {
 
-    private $daoUser;
 
     public function __construct() {
         parent::__construct();
