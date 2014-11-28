@@ -49,10 +49,11 @@ $route['404_override'] = 'errors/page_missing';
 //$route['users/(:any)'] = 'users/view/$1';
 //$route['users'] = 'users';
 //$route['(:any)'] = 'pages/view/$1';
-$route['users/checkNick/(:any)'] = 'Users/checkNick/$1';
+$route['users/read/(:any)'] = 'Users/read/$1';
 $route['users/getAll'] = 'Users/getAll';
 $route['users/create/(:any)'] = 'Users/create/$1/$2/$3/$4/$5';
 $route['listtask/create/(:any)'] = 'ListTask/create/$1/$2/$3/$4/$5/$6/$7';
+$route['task/update/(:any)'] = 'Task/update/$1/$2/$3';
 
 $route['default_controller'] = 'pages/view';
 /* End of file routes.php */

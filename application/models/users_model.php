@@ -21,8 +21,6 @@ class Users_model extends CI_Model implements CRUD {
     private $email;
     private $password;
 
-
-
     function __construct($name = false, $nick = false, $email = false, $password = false) {
         parent::__construct();
         $this->load->database();
@@ -49,7 +47,6 @@ class Users_model extends CI_Model implements CRUD {
         return $this->email;
     }
 
-    
     public function setId_User($id_User) {
         $this->id_User = $id_User;
     }
@@ -74,23 +71,21 @@ class Users_model extends CI_Model implements CRUD {
         $this->password = $password;
     }
 
-    
     ////////////////////////////////////////////
     /////////////////JSON///////////////////////
     ////////////////////////////////////////////
-    
-    public function goToJson($object){
-        
-            $user = array('id_User' => $object->getId_User(),
-                'name' => $object->getName(),
-                'nick' => $object->getNick(),
-                'email' => $object->getEmail(),
-                'password' => $object->getPassword());
-        
+
+    public function goToJson($object) {
+
+        $user = array('id_User' => $object->getId_User(),
+            'name' => $object->getName(),
+            'nick' => $object->getNick(),
+            'email' => $object->getEmail(),
+            'password' => $object->getPassword());
+
         return $user;
     }
-    
-    
+
     ///////////////////////////////////////////////    
     ///////////DATABASE////////////////////////////
     ///////////////////////////////////////////////
@@ -116,8 +111,10 @@ class Users_model extends CI_Model implements CRUD {
         
     }
 
-    public function read($id) {
-        
+    public function read($nick) {
+        $data = array('nick' => $nick);
+        $query = $this->db->get_where('USERS', $data);
+        return $query->row_array();
     }
 
     public function update($object) {
@@ -129,9 +126,8 @@ class Users_model extends CI_Model implements CRUD {
         return $query->result_array();
     }
 
-    public function checkNick($nick){
-         $query = $this->db->get_where('USERS', array('nick' => $nick));
-         return $query->row_array();
-    }
-    
+//    public function checkNick($nick){
+//         $query = $this->db->get_where('USERS', array('nick' => $nick));
+//         return $query->row_array();
+//    }
 }

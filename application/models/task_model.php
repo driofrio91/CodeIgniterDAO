@@ -105,7 +105,14 @@ class task_model extends CI_Model implements CRUD {
     }
 
     public function getAll() {
-        
+        $query = $this->db->get('TASKS');
+        return $query->result_array();
+    }
+    
+    public function getAllWhere($id_List) {
+        $data = array('id_List' => $id_List);
+        $query = $this->db->get_where('TASKS', $data);
+        return $query->result_array();
     }
 
     public function read($id) {

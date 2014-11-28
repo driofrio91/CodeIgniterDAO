@@ -31,8 +31,12 @@ class Users extends CI_Controller {
         
     }
 
-    public function read($id) {
-        
+    public function read($nick) {
+         $user['user'] = $this->users_model->read($nick);
+        if (! $user['user']) {
+             set_status_header(209, 'no existe ese usuario');
+        }
+       $this->load->view('users/error', $user);
     }
 
     public function update($object) {
@@ -48,12 +52,8 @@ class Users extends CI_Controller {
         $this->load->view('users/indexAll', $allUsers);
     }
 
-    public function checkNick($nick) {
-        $user['user'] = $this->users_model->checkNick($nick);
-        if (! $user['user']) {
-             set_status_header(209, 'no existe ese usuario');
-        }
-       $this->load->view('users/error', $user);
-    }
+//    public function checkNick($nick) {
+//       
+//    }
 
 }

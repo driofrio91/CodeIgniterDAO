@@ -144,7 +144,7 @@ class listtask_model extends CI_Model implements CRUD {
         $this->db->insert('LISTTASKS', $data);
         $list_task->setId_List($this->db->insert_id());
 
-      //  $temp = $this->goToJson($list_task);
+        //  $temp = $this->goToJson($list_task);
         return $list_task;
     }
 
@@ -152,15 +152,19 @@ class listtask_model extends CI_Model implements CRUD {
         
     }
 
-    public function getAll() {
-        
-    }
+    
 
-    public function read($id) {
-        
+    public function read($id_UnicoL) {
+        $data = array('id_UnicoL' => $id_UnicoL);
+        $query = $this->db->get_where('LISTTASKS', $data);
+        return $query->row_array();
     }
 
     public function update($object) {
+        
+    }
+    
+    public function getAll() {
         
     }
 
