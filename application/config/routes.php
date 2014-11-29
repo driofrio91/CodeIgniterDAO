@@ -54,6 +54,7 @@ $route['users/getAll'] = 'Users/getAll';
 $route['users/create/(:any)'] = 'Users/create/$1/$2/$3/$4/$5';
 $route['listtask/create/(:any)'] = 'ListTask/create/$1/$2/$3/$4/$5/$6/$7';
 $route['task/update/(:any)'] = 'Task/update/$1/$2/$3';
+$route['group/share/(:any)'] = 'Group/shareList/$1/$2/$3';
 
 $route['default_controller'] = 'pages/view';
 /* End of file routes.php */

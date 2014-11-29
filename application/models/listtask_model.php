@@ -152,17 +152,42 @@ class listtask_model extends CI_Model implements CRUD {
         
     }
 
-    
-
     public function read($id_UnicoL) {
         $data = array('id_UnicoL' => $id_UnicoL);
         $query = $this->db->get_where('LISTTASKS', $data);
         return $query->row_array();
     }
 
-    public function update($object) {
-        
+
+    public function update($list_task) {
+        if ($list_task instanceof listtask_model) {
+            $data = array("titleList" => $list_task->getTitleList(),
+                "dateList" => $list_task->getDateList(),
+                "status_share" => $list_task->getStatus_share(),
+                "status" => $list_task->getStatus(),
+                "id_UnicoL" => $list_task->getId_UnicoL(),
+                "id_Group" => $list_task->getId_Group(),
+                "id_User" => $list_task->getId_User());
+            $this->db->update("LISTTASKS", $data, array("id_List" => $list_task->getId_List()));
+        }
     }
+    
+        //    private $id_List;
+//	private $titleList;
+//	private $dateList;
+//	private $status_share;
+//	private $status;	
+//	private $id_UnicoL;	
+//	private $id_Group;
+//	private $id_User;
+    public function hydrat($array){
+        $object = new listtask_model($array['id_List'],
+                $array['titleList'], $array['dateList'], 
+                $array['status_share'], $array['status'], 
+                $array['id_UnicoL'], $array['id_Group'], $array['id_User']);
+        return $object;
+    }
+
     
     public function getAll() {
         

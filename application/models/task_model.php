@@ -109,6 +109,11 @@ class task_model extends CI_Model implements CRUD {
         return $query->result_array();
     }
     
+    /**
+     * Metodo que recuperara una lista de tareas por id de lista.
+     * @param type $id_List
+     * @return type
+     */
     public function getAllWhere($id_List) {
         $data = array('id_List' => $id_List);
         $query = $this->db->get_where('TASKS', $data);
@@ -119,6 +124,11 @@ class task_model extends CI_Model implements CRUD {
         
     }
 
+    /**
+     * Metodo que cambiara el estado de una tarea de realizada a no realizada y
+     * viceversa. 
+     * @param task_model $task
+     */
     public function update($task) {
         if ($task instanceof task_model) {
             $data = array('tittle' => $task->getTittle(),
@@ -128,5 +138,4 @@ class task_model extends CI_Model implements CRUD {
         }
     }
 
-//put your code here
 }
