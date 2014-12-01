@@ -20,8 +20,8 @@ class Users_model extends CI_Model implements CRUD {
     private $nick;
     private $email;
     private $password;
-
-    function __construct($name = false, $nick = false, $email = false, $password = false) {
+    private $id_UserGCM;
+                function __construct($name = false, $nick = false, $email = false, $password = false, $id_UserGCM = false) {
         parent::__construct();
         $this->load->database();
         //
@@ -29,6 +29,7 @@ class Users_model extends CI_Model implements CRUD {
         $this->nick = $nick;
         $this->email = $email;
         $this->password = $password;
+        $this->id_UserGCM = $id_UserGCM;
     }
 
     public function getId_User() {
@@ -70,7 +71,16 @@ class Users_model extends CI_Model implements CRUD {
     public function setPassword($password) {
         $this->password = $password;
     }
+    
+    public function getId_UserGCM() {
+        return $this->id_UserGCM;
+    }
 
+    public function setId_UserGCM($id_UserGCM) {
+        $this->id_UserGCM = $id_UserGCM;
+    }
+
+    
     ////////////////////////////////////////////
     /////////////////JSON///////////////////////
     ////////////////////////////////////////////
@@ -81,7 +91,8 @@ class Users_model extends CI_Model implements CRUD {
             'name' => $object->getName(),
             'nick' => $object->getNick(),
             'email' => $object->getEmail(),
-            'password' => $object->getPassword());
+            'password' => $object->getPassword(),
+            'id_UserGCM' => $object->getId_UserGCM());
 
         return $user;
     }
@@ -99,7 +110,8 @@ class Users_model extends CI_Model implements CRUD {
             $data = array('name' => $user->getName(),
                 'nick' => $user->getNick(),
                 'email' => $user->getEmail(),
-                'password' => $user->getPassword());
+                'password' => $user->getPassword(),
+                'id_UserGCM' => $user->getId_UserGCM());
             $this->db->insert('USERS', $data);
             $user->setId_User($this->db->insert_id());
         }
