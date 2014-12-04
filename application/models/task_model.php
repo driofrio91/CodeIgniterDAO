@@ -130,12 +130,15 @@ class task_model extends CI_Model implements CRUD {
      * @param task_model $task
      */
     public function update($task) {
-        if ($task instanceof task_model) {
+        print_r($task);
+     //   if ($task instanceof task_model) {
             $data = array('tittle' => $task->getTittle(),
                 'realized' => $task->getRealized(),
                 'id_List' => $task->getId_List());
-            $this->db->update('TASKS', $data, array('id_Task' => $task->getId_List()));
-        }
+            echo '<br> ==> updating <== <br>';
+            $bar =$this->db->update('TASKS', $data, array('id_Task' => $task->getId_task()));
+            echo $bar.'ppppppppppp';
+      //      }
     }
 
 }

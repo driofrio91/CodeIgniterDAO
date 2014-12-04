@@ -192,5 +192,5 @@ class listtask_model extends CI_Model implements CRUD {
     public function getAll() {
         
     }
-
+    
 }

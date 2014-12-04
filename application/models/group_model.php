@@ -71,20 +71,33 @@ class group_model extends CI_Model implements CRUD {
     }
 
     public function read($id_UnicoG) {
-        
+        $data = array('id_UnicoG' => $id_UnicoG);
+        $query = $this->db->get_where('GROUPS', $data);
+        return $query->row_array();
     }
 
     public function update($group) {
         if ($group instanceof group_model) {
-            $data = array("nameGroup" => 'caca',
+            $data = array("nameGroup" => 'Sin nombre',
                 "id_UnicoG" => $group->getId_UnicoG());
          
             $this->db->update('GROUPS', $data, array('id_Group' => $group->getId_Group()));
         }
     }
+    
+    
 
     public function getAll() {
         
+    }
+    
+    public function transformToArray($group){
+        if ($group instanceof group_model) {
+            $data = array('id_Group' => $group->getId_Group(),
+                'nameGroup' => $group->getNameGroup(),
+                'id_UnicoG' => $group->getId_UnicoG());
+        }
+        return $data;
     }
 
 }

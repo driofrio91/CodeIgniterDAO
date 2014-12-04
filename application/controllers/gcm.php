@@ -16,25 +16,13 @@ class gcm {
     //URL a la que enviaremos los datos
     var $GCM_URL = 'https://android.googleapis.com/gcm/send';
     //
-    var $apikey = "AIzaSyBIAjFIj1DkmQqPTRne8qhtUIqk4qj7NCQ";
+    var $apikey = "AIzaSyA7ch8mR8vGu6BQiRq0TFYLFURLujw7dDU";
     
-    public function sendGCM($reg1, $mensaje) {
+    public function sendGCM($reg1, $listTask, $task) {
         
-        $registrationIDs = array($reg1, $mensaje);
+      //  $registrationIDs = array($reg1, $mensaje);
        
-        if ($mensaje instanceof Mensajes) {
-            
-            $temp = array("id" => $mensaje->getPrimaryKey(),
-                            "texto" => $mensaje->getTexto(),
-                            "idConver" => $mensaje->getIdConversacion(),
-                            "idUsuario" => $mensaje->getIdUsuario());
-            
-            
-            $fields = array(
-            'registration_ids' => $registrationIDs,
-            'data' => array("mensaje" => $temp),
-        );
-        }
+        
         $headers = array(
             'Authorization:key = ' . $this->apikey,
             'Content-Type: application/json'
