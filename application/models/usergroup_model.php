@@ -10,7 +10,7 @@ include_once ('application/crud/CRUD.php');
 /**
  * Description of usergroup_model
  *
- * @author danny
+ * @author sandy
  */
 class usergroup_model extends CI_Model implements CRUD {
 

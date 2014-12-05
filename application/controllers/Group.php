@@ -5,11 +5,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+include_once ('gcm.php');
 /**
  * Description of Group
  *
- * @author danny
+ * @author sandy
  */
 class Group extends CI_Controller {
 
@@ -19,6 +19,7 @@ class Group extends CI_Controller {
         $this->load->model('group_model');
         $this->load->model('users_model');
         $this->load->model('usergroup_model');
+        $this->load->model('task_model');
     }
 
     /**
@@ -34,11 +35,11 @@ class Group extends CI_Controller {
         $id_UnicoG = $nickAdmin . $Group->getId_Group();
         $Group->setId_UnicoG($id_UnicoG);
         $this->group_model->update($Group);
-       // print_r($Group);
+        // print_r($Group);
         $data['group'] = $this->group_model->transformToArray($Group);
 
         //print_r($data);
-         $this->load->view('group/index', $data);
+        $this->load->view('group/index', $data);
 
         return $Group;
     }
@@ -81,33 +82,79 @@ class Group extends CI_Controller {
         // print_r($userAdmin);
         // print_r($userShare);
     }
-    
+
     /**
      * 
      * @param type $id_UnicoG
      */
-    public function insertUserGroup($id_UnicoG){
-        $group = $this->group_model->read($id_UnicoG);
+//    public function insertUserGroup($id_UnicoG){
+//        $group = $this->group_model->read($id_UnicoG);
+//        
+//        //recupero los usuarios
+//        $rows = $this->usergroup_model->getAllForIdGroup($group['id_Group']);
+//        //print_r($rows);
+//        
+//        
+//        $users = json_decode($_REQUEST['json'], true);
+//        print_r($users);
+//        foreach ($users as $key => $value) {
+//            $user = $this->users_model->read($value['nick']);
+//            $user_group = new usergroup_model($user['id_User'], $value['admin'], $group['id_Group']);
+//            $this->usergroup_model->create($user_group);
+//        }
+//        
+//        
+//    }
+
+    public function insertUserGroup($adminGroup, $nick, $id_Group, $nick_creator) {
+
+        $user = $this->users_model->read($nick);
         
-        //recupero los usuarios
-        $rows = $this->usergroup_model->getAllForIdGroup($group['id_Group']);
-        //print_r($rows);
-        
-        
-        $users = json_decode($_REQUEST['json'], true);
-        print_r($users);
-        foreach ($users as $key => $value) {
-            $user = $this->users_model->read($value['nick']);
-            $user_group = new usergroup_model($user['id_User'], $value['admin'], $group['id_Group']);
-            $this->usergroup_model->create($user_group);
+        $user_creator = $this->users_model->read($nick_creator);
+
+        $user_creator['password'] = "";
+
+        $user_group = new usergroup_model($user['id_User'], $adminGroup, $id_Group);
+        $this->usergroup_model->create($user_group);
+
+        $group = $this->group_model->readForID($id_Group);
+
+        $listTask = $this->listtask_model->readIDGroup($group['id_Group']);
+
+        print_r($listTask);
+
+        $all_task = $this->task_model->getAllWhere($listTask['id_List']);
+
+        $listTask['task'] = $all_task;
+
+        $listTask['id_Group'] = $group;
+
+        $listTask['id_User'] = $user_creator;
+
+       // print_r(json_encode($listTask));
+
+        /////////GCM
+
+        if ($adminGroup == 0) {
+            echo 'lslslsl';
+            $sendList = array("listTask" => $listTask);
+            // $group = $this->group_model->readForID($ListTask['id_Group']);
+            //print_r($group);
+            $gcm = new gcm();
+
+           // $userGroup = $this->usergroup_model->getAllForIdGroup($ListTask['id_Group']);
+            echo '<br>-------------------------------';
+            // print_r($userGroup);
+            //foreach ($userGroup as $key => $value) {
+             //   $user = $this->users_model->readForID($value['id_User']);
+                $gcm->sendGCM($user, $sendList, "listTask");
+            //}
         }
-        
-        
     }
-    
-    public function search($rowsDatabase, $rowNew){
+
+    public function search($rowsDatabase, $rowNew) {
         $save = false;
-       
+
         foreach ($rowsDatabase as $key => $value) {
             print_r($key);
             print_r($value);

@@ -5,11 +5,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+include_once ('gcm.php');
 
 /**
  * Description of ListTask
  *
- * @author danny
+ * @author sandy
  */
 class ListTask extends CI_Controller {
 
@@ -18,6 +19,8 @@ class ListTask extends CI_Controller {
         $this->load->model('listtask_model');
         $this->load->model('task_model');
         $this->load->model('users_model');
+        $this->load->model('group_model');
+        $this->load->model('usergroup_model');
     }
 
     //    private $id_List;
@@ -64,6 +67,10 @@ class ListTask extends CI_Controller {
         return $ListTask;
     }
 
+    /**
+     * Añado tareas a la lista
+     * @param type $id_UnicoL
+     */
     public function update($id_UnicoL) {
         $ListTask = $this->read($id_UnicoL);
         $taks = $this->task_model->getAllWhere($ListTask['id_List']);
@@ -72,54 +79,82 @@ class ListTask extends CI_Controller {
         print_r(json_encode($updateTask));
         echo '<br>estas son las que ya hay <br>';
         print_r(json_encode($taks));
-        
-       // $save = false;
-        
+
+        // $save = false;
+
         foreach ($updateTask as $key => $value) {
             echo 'key => ' . $key . '<br>';
             echo 'valor => ' . $value . '<br>';
             echo 'valor titulo => ' . $value['tittle'] . '<br>';
-               $save = $this->search($taks, $value['tittle']);
-               if (!$save) {
-                   echo '<br><strong>ALMACENO</strong><br>';
-                   $new_task = new task_model(null, $value['tittle'], $value['realized'], $ListTask['id_List']);
-                    $this->task_model->create($new_task);
-               }else{
-                   echo '<br><strong>NO</strong><br>';
-               }
+            $save = $this->search($taks, $value['tittle']);
+            if (!$save) {
+                echo '<br><strong>ALMACENO</strong><br>';
+                $new_task = new task_model(null, $value['tittle'], $value['realized'], $ListTask['id_List']);
+                $temp = $this->task_model->create($new_task);
 
+                $add_task = $this->task_model->goToArray($temp);
+                
+                $sendList = array("id_UnicoL" => $id_UnicoL,
+                    "task" => $add_task);
+                // $group = $this->group_model->readForID($ListTask['id_Group']);
+                //print_r($group);
+                $gcm = new gcm();
+
+                $userGroup = $this->usergroup_model->getAllForIdGroup($ListTask['id_Group']);
+                echo '<br>';
+                // print_r($userGroup);
+                foreach ($userGroup as $key => $value) {
+                    $user = $this->users_model->readForID($value['id_User']);
+                    $gcm->sendGCM($user, $sendList, "add_tasks");
+                }
+            } else {
+                echo '<br><strong>NO</strong><br>';
+            }
         }
     }
-    
-    public function updateTasks($id_UnicoL){
+
+    /**
+     * Modifico las tareas de realizada a no realizada y viceversa
+     * @param type $id_UnicoL
+     */
+    public function updateTasks($id_UnicoL) {
         $ListTask = $this->read($id_UnicoL);
         $taks = $this->task_model->getAllWhere($ListTask['id_List']);
-        print_r(json_encode($taks));
+        // print_r($ListTask);
         $update_tasks = json_decode($_REQUEST['json'], true);
-        
+
         foreach ($update_tasks as $key_update => $value_update) {
-            
+
             foreach ($taks as $key => $value) {
-                print_r($value);
+                //print_r($value);
                 echo '<br><br>';
                 if ($value_update['tittle'] == $value['tittle']) {
-                    $task = new task_model($value['id_Task'], $value['tittle'],
-                            $value_update['realized'], $value['id_List']);
-                    print_r($task);
-                    echo 'en el controlador';
+                    $task = new task_model($value['id_Task'], $value['tittle'], $value_update['realized'], $value['id_List']);
+                    // print_r($task);
+                    // echo 'en el controlador';
                     $this->task_model->update($task);
                 }
             }
-            
+        }
+        $sendList = array("id_UnicoL" => $id_UnicoL,
+            "tasks" => $update_tasks);
+        // $group = $this->group_model->readForID($ListTask['id_Group']);
+        //print_r($group);
+        $gcm = new gcm();
+
+        $userGroup = $this->usergroup_model->getAllForIdGroup($ListTask['id_Group']);
+        echo '<br>';
+        // print_r($userGroup);
+        foreach ($userGroup as $key => $value) {
+            $user = $this->users_model->readForID($value['id_User']);
+            $gcm->sendGCM($user, $sendList, "task");
         }
     }
-    
-    public function updateListTaskGroup($id_UnicoL, $id_UnicoG){
+
+    public function updateListTaskGroup($id_UnicoL, $id_group) {
         $ListTask = $this->read($id_UnicoL);
         if (!empty($ListTask)) {
-            $update_listTask = new listtask_model($ListTask['id_List'], $ListTask['titleList'], 
-                    $ListTask['dateList'], $ListTask['status_share'], $ListTask['status'], 
-                    $ListTask['id_UnicoL'], $id_UnicoG, $ListTask['id_User']);
+            $update_listTask = new listtask_model($ListTask['id_List'], $ListTask['titleList'], $ListTask['dateList'], $ListTask['status_share'], $ListTask['status'], $ListTask['id_UnicoL'], $id_group, $ListTask['id_User']);
             $this->listtask_model->update($update_listTask);
         }
     }
@@ -142,13 +177,12 @@ class ListTask extends CI_Controller {
 //            }
 //        }
 //    }
-    
-    public function search($Listtasks, $title){
+
+    public function search($Listtasks, $title) {
         $save = false;
         foreach ($Listtasks as $key => $value) {
-            if ($value['tittle']=== $title) {
+            if ($value['tittle'] === $title) {
                 $save = true;
-                
             }
         }
         return $save;

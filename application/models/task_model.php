@@ -71,14 +71,14 @@ class task_model extends CI_Model implements CRUD {
      * @param task_model $object
      * @return type json
      */
-    public function goToJson($object) {
+    public function goToArray($object) {
         if ($object instanceof task_model) {
             $list_task = array('id_Task' => $object->getId_task(),
                 'tittle' => $object->getTittle(),
                 'realized' => $object->getRealized(),
                 'id_List' => $object->getId_List());
         }
-        $json = json_encode($list_task);
+        $json = $list_task;
         return $json;
     }
 
@@ -130,14 +130,14 @@ class task_model extends CI_Model implements CRUD {
      * @param task_model $task
      */
     public function update($task) {
-        print_r($task);
+      //  print_r($task);
      //   if ($task instanceof task_model) {
             $data = array('tittle' => $task->getTittle(),
                 'realized' => $task->getRealized(),
                 'id_List' => $task->getId_List());
-            echo '<br> ==> updating <== <br>';
+         //   echo '<br> ==> updating <== <br>';
             $bar =$this->db->update('TASKS', $data, array('id_Task' => $task->getId_task()));
-            echo $bar.'ppppppppppp';
+            //echo $bar.'ppppppppppp';
       //      }
     }
 

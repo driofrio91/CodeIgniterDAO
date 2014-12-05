@@ -10,7 +10,7 @@ include_once ('application/crud/CRUD.php');
 /**
  * Description of group_model
  *
- * @author danny
+ * @author sandy
  */
 class group_model extends CI_Model implements CRUD {
 
@@ -76,22 +76,26 @@ class group_model extends CI_Model implements CRUD {
         return $query->row_array();
     }
 
+    public function readForID($id) {
+        $data = array('id_Group' => $id);
+        $query = $this->db->get_where('GROUPS', $data);
+        return $query->row_array();
+    }
+
     public function update($group) {
         if ($group instanceof group_model) {
             $data = array("nameGroup" => 'Sin nombre',
                 "id_UnicoG" => $group->getId_UnicoG());
-         
+
             $this->db->update('GROUPS', $data, array('id_Group' => $group->getId_Group()));
         }
     }
-    
-    
 
     public function getAll() {
         
     }
-    
-    public function transformToArray($group){
+
+    public function transformToArray($group) {
         if ($group instanceof group_model) {
             $data = array('id_Group' => $group->getId_Group(),
                 'nameGroup' => $group->getNameGroup(),

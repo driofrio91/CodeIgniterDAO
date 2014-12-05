@@ -59,7 +59,7 @@ $route['listtask/updatelisttaskgroup/(:any)'] = 'ListTask/updateListTaskGroup/$1
 $route['task/update/(:any)'] = 'Task/update/$1/$2/$3';
 $route['group/share/(:any)'] = 'Group/shareList/$1/$2/$3';
 $route['group/create/(:any)'] = 'Group/create/$1';
-$route['group/insertusergroup/(:any)'] = 'Group/insertUserGroup/$1';
+$route['group/insertusergroup/(:any)'] = 'Group/insertUserGroup/$1/$2/$3/$4';
 
 $route['default_controller'] = 'pages/view';
 /* End of file routes.php */

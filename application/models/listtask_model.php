@@ -10,7 +10,7 @@ include_once ('application/crud/CRUD.php');
 /**
  * Description of listtask_model
  *
- * @author danny
+ * @author sandy
  */
 class listtask_model extends CI_Model implements CRUD {
 
@@ -154,6 +154,12 @@ class listtask_model extends CI_Model implements CRUD {
 
     public function read($id_UnicoL) {
         $data = array('id_UnicoL' => $id_UnicoL);
+        $query = $this->db->get_where('LISTTASKS', $data);
+        return $query->row_array();
+    }
+    
+    public function readIDGroup($id_Group) {
+        $data = array('id_Group' => $id_Group);
         $query = $this->db->get_where('LISTTASKS', $data);
         return $query->row_array();
     }

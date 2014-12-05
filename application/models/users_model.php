@@ -128,6 +128,12 @@ class Users_model extends CI_Model implements CRUD {
         $query = $this->db->get_where('USERS', $data);
         return $query->row_array();
     }
+    
+    public function readForID($id_User) {
+        $data = array('id_User' => $id_User);
+        $query = $this->db->get_where('USERS', $data);
+        return $query->row_array();
+    }
 
     public function update($object) {
         
